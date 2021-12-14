@@ -8,12 +8,12 @@
     <div class="container-fluid">
         <div class="row mb-2">
             <div class="col-sm-6">
-                <h1>Edit Asset Type</h1>
+                <h1>Change Password</h1>
             </div>
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
                     <li class="breadcrumb-item"><a href="home">Home</a></li>
-                    <li class="breadcrumb-item active">Edit Asset Type</li>
+                    <li class="breadcrumb-item active">Change Password</li>
                 </ol>
             </div>
         </div>
@@ -41,34 +41,47 @@
                 <!-- card -->
                 <div class="card card-primary">
                     <!-- form start -->
-                    <form method="post" action="{{url('/editassettypevalid')}}">
+                    <form method="post" action="{{url('/changepassvalid')}}">
                         @csrf()
                         <div class="card-body">
                             <div class="form-group row">
-                                <label for="name" class="col-sm-2 col-form-label">Name:</label>
+                                <label for="opass" class="col-sm-2 col-form-label">Current Password:</label>
                                 <div class="col-sm-10">
-                                    <input type="text" class="form-control" id="name" name="name" placeholder="Asset Name" value="{{ $typeData->name }}">
-                                    @if($errors->has('name'))
+                                    <input type="password" class="form-control" id="opass" name="opass" placeholder="Current Password">
+                                    @if($errors->has('opass'))
                                     <div class="alert-danger">
-                                        <span class="text-white pl-3">{{$errors->first('name')}}</span>
+                                        <span class="text-white pl-3">{{$errors->first('opass')}}</span>
                                     </div>
                                     @endif
                                 </div>
                             </div>
 
                             <div class="form-group row">
-                                <label for="desc" class="col-sm-2 col-form-label">Description:</label>
+                                <label for="pass" class="col-sm-2 col-form-label">New Password:</label>
                                 <div class="col-sm-10">
-                                    <textarea class="form-control" name="desc" id="desc" placeholder="Asset Description">{{ $typeData->description }}</textarea>
-                                    @if($errors->has('desc'))
+                                    <input type="password" class="form-control" id="pass" name="pass" placeholder="New Password">
+                                    @if($errors->has('pass'))
                                     <div class="alert-danger">
-                                        <span class="text-white pl-3">{{$errors->first('desc')}}</span>
+                                        <span class="text-white pl-3">{{$errors->first('pass')}}</span>
                                     </div>
                                     @endif
                                 </div>
                             </div>
-                            <input type="hidden" name="tid" value="{{ $typeData->id }}">
-                            <input type="submit" class="btn btn-primary btn-large" name="updateType" value="Update Asset Type">
+
+                            <div class="form-group row">
+                                <label for="cpass" class="col-sm-2 col-form-label">Confirm New Password:</label>
+                                <div class="col-sm-10">
+                                    <input type="password" class="form-control" id="cpass" name="cpass" placeholder="Confirm Password">
+                                    @if($errors->has('cpass'))
+                                    <div class="alert-danger">
+                                        <span class="text-white pl-3">{{$errors->first('cpass')}}</span>
+                                    </div>
+                                    @endif
+                                </div>
+                            </div>
+
+                            <input type="hidden" name="uid" value="{{ $id }}"> 
+                            <input type="submit" class="btn btn-primary btn-large" name="changePass" value="Change Password">
                         </div>
                     </form>
                 </div>

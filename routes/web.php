@@ -21,6 +21,12 @@ Route::middleware([Loginsession::class])->group(function () {
 
     Route::get('/dashboard', [Main::class, 'dashboard']);
 
+    Route::get('/changepassword', [Main::class, 'changepass']);
+    Route::post('/changepassvalid', [Main::class, 'passvalid']);
+
+    Route::get('/editprofile', [Main::class, 'editprofile']);
+    Route::post('/editprofilevalid', [Main::class, 'editprofilevalid']);
+
     Route::get('/asset-type', [Main::class, 'assetType']);
     Route::get('/add-asset-type', [Main::class, 'addAssetType']);
     Route::post('/assettypevalid', [Main::class, 'assetTypeValid']);

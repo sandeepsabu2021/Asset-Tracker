@@ -84,14 +84,14 @@
                             
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
-                                    <a href="#" class="nav-link">
+                                    <a href="changepassword" class="nav-link">
                                         <i class="fa fa-key nav-icon"></i>
                                         <p>Change Password</p>
                                     </a>
                                 </li>
 
                                 <li class="nav-item">
-                                    <a href="#" class="nav-link">
+                                    <a href="editprofile" class="nav-link">
                                         <i class="far fa-edit nav-icon"></i>
                                         <p>Edit Profile</p>
                                     </a>
