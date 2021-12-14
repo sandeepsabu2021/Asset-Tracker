@@ -10,6 +10,7 @@ use App\Models\Asset;
 use App\Models\AssetImage;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 
 class Main extends Controller
@@ -22,6 +23,76 @@ class Main extends Controller
     public function home()  //home page
     {
         return view('admin.pages.home');
+    }
+
+    public function changepass()    //change password page
+    {
+        $id = Auth::user()->id;
+        return view('admin.pages.changepass', ['id' => $id]);
+    }
+
+    public function passvalid(Request $req) //change password validation
+    {
+        $validatePass = $req->validate([
+            'uid' => 'required',
+            'opass' => 'required',
+            'pass' => 'required|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/',
+            'cpass' => 'required_with:pass|same:pass',
+        ], [
+            'opass.required' => "Enter current password",
+
+            'pass.required' => "Enter password",
+            'pass.regex' => "Minimum eight characters, at least one uppercase letter, one lowercase letter and one number",
+
+            'cpass.required_with' => "Re-enter new password",
+            'cpass.same' => "Password doesn't match",
+        ]);
+        if ($validatePass) {
+
+            $password = Auth::user()->password;
+            if (Hash::check($req->opass, $password)) {
+                $npass = Hash::make($req->pass);
+                DB::table('users')->where('id', $req->uid)->update([
+                    'password' => $npass,
+
+                ]);
+                return back()->with('Success', 'Password changed successfully!');
+            } else {
+                return back()->with('Error', 'Incorrect current password');
+            }
+        }
+    }
+
+    public function editprofile()
+    {
+        return view('admin.pages.editprofile');
+    }
+
+    public function editprofilevalid(Request $req) //edit profile validation
+    {
+        $validateUser = $req->validate([
+            'uid' => 'required',
+            'name' => 'required',
+            'mail' => 'required|regex:/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/',
+        ], [
+            'name.required' => "Enter name",
+
+            'mail.required' => "Enter password",
+            'mail.regex' => "Enter valid format (example: abc@lmn.xyz)",
+
+        ]);
+        if ($validateUser) {
+
+            if(DB::table('users')->where('id', $req->uid)->update([
+                'name' => $req->name,
+                'email' => $req->mail,
+
+            ])){
+                return back()->with('Success', 'Profile updated successfully!');
+            }else {
+                return back()->with('Error', 'Profile update failed');
+            }
+        }
     }
 
     public function dashboard() //dashboard page
@@ -82,10 +153,9 @@ class Main extends Controller
 
             $type = new AssetType();
             $type->name = $req->name;
-            if($req->desc){
+            if ($req->desc) {
                 $type->description = $req->desc;
-            }
-            else{
+            } else {
                 $type->description = '';
             }
             if ($type->save()) {
@@ -298,9 +368,8 @@ class Main extends Controller
         if (!$images) {
             return view('admin.pages.view-asset', ['asset' => $asset, 'images' => '0 Images Available']);
         } else {
-            return view('admin.pages.view-asset', ['asset' => $asset, 'images' => $images, 'type'=>$type]);
+            return view('admin.pages.view-asset', ['asset' => $asset, 'images' => $images, 'type' => $type]);
         }
-
     }
 
     public function logout()    //logout
@@ -310,3 +379,20 @@ class Main extends Controller
         return Redirect::to('/login');
     }
 }
+
+// DB::table('posts')->where('id', $req->id)->update([
+//     'title' => $req->title,
+//     'description' => $req->desc,
+
+// ]);
+
+// if (Hash::check($pass, $userdets->password)) 
+
+// 'pass' => 'required|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/',
+//             'conpass' => 'required_with:pass|same:pass'
+
+// 'pass.required' => "Enter password",
+//             'pass.regex' => "Minimum eight characters, at least one uppercase letter, one lowercase letter and one number",
+
+//             'conpass.required_with' => "Re-enter password",
+//             'conpass.same' => "Password doesn't match",
